@@ -26,7 +26,9 @@
   --jade:#0f3a2f; --jade-ink:#efe3c4; --gold:#d6b46a; --gold-soft:#2e2a1c; --red:#ec7a62; --red-soft:#3a1f19; --sky:#7cc0e0; color-scheme:dark}
 
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden}
+body{margin:0;overflow-wrap:anywhere;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--jade)}
 .wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1,h2,h3{font-family:var(--f-display);font-weight:400;text-wrap:balance;margin:0;line-height:1.2}
@@ -57,7 +59,11 @@ button,input{font:inherit}
 .tabs .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
 .tabs .wrap::-webkit-scrollbar{display:none}
 .tab{border:0;background:none;color:var(--muted);padding:13px 12px 11px;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;font-weight:600;font-size:14px}
+.tab{touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:color .15s,border-color .15s,background .15s}
+.tab:hover{color:var(--ink)}
+.tab:active{background:var(--sunk)}
 .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--gold)}
+.view>*,.day,.place,.group{min-width:0}
 main .wrap{padding-block:22px 60px}
 .view{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
 .hero .wrap{grid-template-columns:minmax(0,1fr)}
@@ -69,7 +75,7 @@ main .wrap{padding-block:22px 60px}
 .dayhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 14px;align-items:baseline}
 .dayhead h3{font-size:20px}
 .date{font-family:var(--f-mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
-.wx{display:inline-flex;gap:8px;align-items:center;font-family:var(--f-mono);font-size:12.5px;padding:3px 9px;border-radius:999px;background:var(--sunk);white-space:nowrap}
+.wx{display:inline-flex;gap:8px;align-items:center;font-family:var(--f-mono);font-size:12.5px;padding:3px 9px;border-radius:999px;background:var(--sunk);max-width:100%}
 .wx i{font-style:normal}
 .flow{margin:0;padding-left:18px;display:grid;gap:3px}
 .flow li::marker{color:var(--gold)}
