@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#164a3c">
+<title>Вьетнам и Камбоджа 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&family=Manrope:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: app shell — sticky tab bar, one column of content ≤ 760px; jade + lantern-gold palette taken from the group's trip cards */
+:root{
+  --bg:#eef2ee; --surface:#ffffff; --sunk:#e1e9e3; --ink:#11261f; --muted:#56685f; --line:#cbd6ce;
+  --jade:#164a3c; --jade-ink:#f1ead6; --gold:#9a7428; --gold-soft:#efe3c4; --red:#b23a28; --red-soft:#f6ddd6;
+  --sky:#2f6e8e;
+  --f-display:"Prata", "Times New Roman", Georgia, serif;
+  --f-body:"Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c1915; --surface:#13241e; --sunk:#0f1f1a; --ink:#e7eee9; --muted:#9db0a6; --line:#284239;
+  --jade:#0f3a2f; --jade-ink:#efe3c4; --gold:#d6b46a; --gold-soft:#2e2a1c; --red:#ec7a62; --red-soft:#3a1f19; --sky:#7cc0e0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1915; --surface:#13241e; --sunk:#0f1f1a; --ink:#e7eee9; --muted:#9db0a6; --line:#284239;
+  --jade:#0f3a2f; --jade-ink:#efe3c4; --gold:#d6b46a; --gold-soft:#2e2a1c; --red:#ec7a62; --red-soft:#3a1f19; --sky:#7cc0e0; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--jade)}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;text-wrap:balance;margin:0;line-height:1.2}
+a{color:var(--sky)}
+button,input{font:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* hero */
+.hero{background:var(--jade);color:var(--jade-ink)}
+.hero .wrap{padding-block:22px 18px;display:grid;gap:14px}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.hero h1{font-size:clamp(28px,6vw,40px);letter-spacing:.02em}
+.hero h1 span{color:#d9bb72}
+.status{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:baseline}
+.status b{font-family:var(--f-display);font-weight:400;font-size:26px}
+.status small{opacity:.8}
+
+/* route strip */
+.strip{display:flex;gap:0;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.stop{flex:1 0 auto;min-width:76px;padding:6px 8px 0 0;border-top:2px solid rgba(239,227,196,.35);position:relative;font-size:12.5px}
+.stop::before{content:"";position:absolute;top:-6px;left:0;width:10px;height:10px;border-radius:50%;background:var(--jade);border:2px solid #d9bb72}
+.stop .d{font-family:var(--f-mono);font-size:11px;opacity:.75;display:block}
+.stop.now::before{background:#d9bb72}
+
+/* tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tabs .wrap::-webkit-scrollbar{display:none}
+.tab{border:0;background:none;color:var(--muted);padding:13px 12px 11px;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;font-weight:600;font-size:14px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--gold)}
+main .wrap{padding-block:22px 60px}
+.view{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
+.hero .wrap{grid-template-columns:minmax(0,1fr)}
+.lead{color:var(--muted);max-width:62ch;margin:0}
+
+/* day cards */
+.day{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:10px}
+.day.today{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.dayhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 14px;align-items:baseline}
+.dayhead h3{font-size:20px}
+.date{font-family:var(--f-mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
+.wx{display:inline-flex;gap:8px;align-items:center;font-family:var(--f-mono);font-size:12.5px;padding:3px 9px;border-radius:999px;background:var(--sunk);white-space:nowrap}
+.wx i{font-style:normal}
+.flow{margin:0;padding-left:18px;display:grid;gap:3px}
+.flow li::marker{color:var(--gold)}
+.notes{display:grid;gap:6px}
+.note{display:grid;grid-template-columns:auto 1fr;gap:8px;font-size:14px;align-items:start}
+.tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-top:2px;white-space:nowrap}
+.t-wear{background:var(--gold-soft);color:var(--gold)}
+.t-warn{background:var(--red-soft);color:var(--red)}
+.t-tbd{background:var(--sunk);color:var(--muted);border:1px dashed var(--line)}
+.t-money{background:var(--sunk);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:none;color:var(--ink);border-radius:999px;padding:3px 10px;font-size:13px;cursor:pointer}
+.chip:hover{border-color:var(--gold)}
+
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:6px}
+.filters button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13.5px}
+.filters button[aria-pressed="true"]{background:var(--jade);color:var(--jade-ink);border-color:var(--jade)}
+
+/* places */
+.city{display:grid;gap:12px}
+.cityhead{position:relative;border-radius:12px;overflow:hidden;min-height:170px;display:flex;align-items:flex-end;background:var(--jade)}
+.cityhead img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:100%}
+.cityhead .cap{position:relative;width:100%;padding:40px 16px 14px;background:linear-gradient(to top,rgba(8,26,20,.92),rgba(8,26,20,0));color:#f1ead6}
+.cityhead h2{font-size:28px;letter-spacing:.03em}
+.cityhead p{margin:2px 0 0;font-size:13.5px;opacity:.9}
+.cityhead.noimg{background:radial-gradient(120% 90% at 85% 10%,#c98a3a 0%,#7a3f1d 38%,#20160f 100%)}
+.cityhead svg{position:absolute;right:12px;top:10px;width:58%;max-width:300px;opacity:.55}
+.place{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:8px}
+.place h3{font-size:18px}
+.place .meta{display:flex;flex-wrap:wrap;gap:6px 12px;font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+.place p{margin:0}
+.lore{display:grid;gap:4px;border-left:3px solid var(--gold);background:var(--sunk);border-radius:0 8px 8px 0;padding:10px 14px}
+.lore h4{margin:6px 0 0;font-family:var(--f-mono);font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.lore h4:first-child{margin-top:0}
+.lore p{font-size:14px}
+.tips{margin:0;padding-left:18px;font-size:14px;color:var(--muted)}
+.maplink{font-size:13px;font-weight:600;text-decoration:none}
+.maplink:hover{text-decoration:underline}
+
+/* map */
+.mapcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto}
+.mapcard svg{display:block;width:100%;min-width:300px;height:auto}
+
+/* checklist */
+.group{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.group h3{font-size:17px;margin-bottom:8px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.group h3 small{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.check{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-top:1px solid var(--line);cursor:pointer}
+.check:first-of-type{border-top:0}
+.check input{width:18px;height:18px;margin-top:2px;accent-color:var(--jade);flex:none}
+.check.done span{color:var(--muted);text-decoration:line-through}
+.progress{height:6px;background:var(--sunk);border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--gold);width:0;transition:width .3s}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:13.5px}
+
+/* money */
+.sum{background:var(--jade);color:var(--jade-ink);border-radius:12px;padding:18px;display:grid;gap:4px}
+.sum b{font-family:var(--f-display);font-weight:400;font-size:38px;font-variant-numeric:tabular-nums}
+.sum small{opacity:.85}
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 16px}
+.row{display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row label{font-weight:600;font-size:14px}
+.row .hint{grid-column:1/-1;font-size:12.5px;color:var(--muted)}
+.row output,.row .val{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;min-width:72px}
+.row input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--gold)}
+.fixed{color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+.tablebox{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+th,td{text-align:left;padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-top:0;font-weight:500}
+td.num{font-family:var(--f-mono);white-space:nowrap}
+
+.toast{font-size:13px;color:var(--muted)}
+.foot{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Групповая поездка · 6–18 ноября 2026</div>
+    <h1>Вьетнам <span>и</span> Камбоджа</h1>
+    <div class="status" id="status"></div>
+    <div class="strip" id="strip" aria-label="Маршрут по городам"></div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Разделы">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" data-v="route" id="tab-route">Маршрут</button>
+    <button class="tab" role="tab" data-v="places" id="tab-places">Места</button>
+    <button class="tab" role="tab" data-v="pack" id="tab-pack">Сборы</button>
+    <button class="tab" role="tab" data-v="money" id="tab-money">Деньги</button>
+  </div>
+</nav>
+
+<main><div class="wrap">
+
+<section class="view" id="v-route" hidden>
+  <p class="lead">Программа по дням. Температура указана по климатическим нормам ноября, а не по прогнозу. Отметки «уточняем» — то, что ещё нужно подтвердить.</p>
+  <div class="mapcard" aria-label="Схема маршрута">
+    <svg id="map" viewBox="0 0 360 300" role="img" aria-label="Схема маршрута: Ханой, Халонг, Ниньбинь, Дананг, Хойан, Сиемреап"></svg>
+  </div>
+  <div id="days" class="view"></div>
+</section>
+
+<section class="view" id="v-places" hidden>
+  <p class="lead">Обзор мест, куда мы едем: что это, почему стоит увидеть и что учесть. Нажмите на место в программе, чтобы перейти к нему.</p>
+  <div class="filters" id="cityFilter"></div>
+  <div id="places" class="view"></div>
+</section>
+
+<section class="view" id="v-pack" hidden>
+  <p class="lead">Отметки сохраняются только в вашем браузере на этом устройстве.</p>
+  <div class="progress" aria-hidden="true"><i id="packBar"></i></div>
+  <div id="packMeta" class="toast"></div>
+  <div id="pack" class="view"></div>
+  <div><button class="btn" id="packReset" type="button">Снять все отметки</button> <span class="toast" id="resetMsg"></span></div>
+</section>
+
+<section class="view" id="v-money" hidden>
+  <p class="lead">Сдвиньте ползунки под себя: итог посчитается сразу. Доплата за тур и виза фиксированы.</p>
+  <div class="sum"><small>Взять с собой, всего</small><b id="total">—</b><small id="totalNote"></small></div>
+  <div class="calc" id="calc"></div>
+  <div class="tablebox"><table>
+    <thead><tr><th>Что</th><th>Как платим</th></tr></thead>
+    <tbody>
+      <tr><td>Доплата за тур, 1540 $</td><td>Наличными гиду, новые доллары с синей полосой</td></tr>
+      <tr><td>Виза в Камбоджу, 30 $</td><td>Наличными при прилёте 15.11</td></tr>
+      <tr><td>Кафе, такси, покупки</td><td>Донги или доллары; карта возможна, но местами комиссия 3–5%</td></tr>
+      <tr><td>Обмен</td><td>В первый день, 6.11. Купюры без надрывов и надписей</td></tr>
+    </tbody>
+  </table></div>
+  <p class="lead">Уже входит в тур: завтраки, трансферы, экскурсии по программе, питание на круизе 7–8.11.</p>
+</section>
+
+<p class="foot">Черновик группы, сверяем с гидом. Погода по климатическим нормам ноября (Weather2Travel, Vinpearl); точный прогноз появится за 3–5 дней до поездки. Время местное, UTC+7.</p>
+</div></main>
+
+<script>
+const IMG={"hanoi": "data:image/webp;base64,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", "halong": "data:image/webp;base64,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", "ninhbinh": "data:image/webp;base64,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", "danang": "data:image/webp;base64,UklGRjYVAABXRUJQVlA4ICoVAACwjgCdASoVAdUAPpU+mkglo6KjrpUsiLASiWMIkCP1dQgdXXeJ5jnIPHw0zcorx67svf8cwvK2Xw3qxw5J7mON+lHwL/bF/99/uO4geVzIV/lmoy1KBV8nLT/kX8WbNQkjUma3Zyh9qPVk1bVGYN/I9oG8crQqUbE1B77l0afnWVS73vbMnOzfNtpaofY58jvus5wFZdEFseqDBuTgwhw7mj9KP0hdIQrwhrMbQO9GcYmaRk2Bqi9f0IPVlifQ+E4+k5UiehX5YX6JlL/5C/j1l3wz8Uuurnk+DXfVBalh5uJnu0d0oQ0xXvkakE177ms0SdkJoKODuUbxFLdP+p1lB+shYEOgpWNXZkDzPSN6c3WIHgCFxPEx38OZe07mPYCg1+fGje9iqTOrKC799O4S7ygZhY9mY8BUdanoTq2LmkbQTo+MKRrnXdI4YAhszhxpnRhjRuzfcyLJtyP50QgVZrmBlctiJ5y/okJkqIWfNbA3B/F/9K3ddKSC7VX/9w71p4OD0xsN7/JU1u2rNXveilPMncaSeq8PIf5YV/o6llDfEDCGRZ8wc12Wy/JizmO2mCFmmzmsEH2zT3Quec9Yk6HSt23CI5L9X6Z3+oPJkGeTAjJ6I1IUSoSxFY9fkaXvqNxQr8ywWyFZfxlUrxUfw2sFtcQ7SDKS5sU4B51xAkljOkSROYKoowl9Tt34Rqd8cRnXAJ44ou/OZJW/r6Xj3KsWUPdO2a6SxdKieJg6gvNrMaaT8v0X1q25u4zSYodC70xjnun/6yfRDlmQXDKLbcdPMt3GV+36Nmv9/rnau+2vNRj//+T8ivTDP/f2uxFf/ppcCVARCEgsW8fylFvQFNykoKOrmuzSMJY8bvZMziUD/n5FWv3PZS/gq3c+V8okAP9HHOOrOvePfDy1Mk7Y3+5i7d/yNLFewUuywT/Lv6MgllYlPNGvd6qpv1MH30in+TDacVJpVSRuFJMfjPlLWXNkm23xyaAF8uHacTT0rkv1TWqf/oRbZaEJ03OolSpvg+EKxwlcLx2gMuFJc6fIbYBs73VyF52qTKuuhV4Y2b4eDecxFoPjyKD1Pd5WTRYu2nyqeXk0rKB3SDEJE9KBc+37VLkcnKHvmkPVpJwpQ3zp3IV9VaSlyYAL6QmuuDgBPC4E4C2QQ5rHECxnTH+cVIErlWF1nENGbTxoBIDvqMe0LFzzcF71AGlEnf6bJzNTm7yHuUAtYdBLvntEajidKkHfdOn5ZzQJD+lL1TaQSW6zKA4MwGnNA3qunbBBYE0I0IC/oGvoMwLz+uNAa/997USzXfsG/LCVRHpI8MRlqfacQNPLrEFmTEuomISuGPska8oFkVY0BVlsUi/8dv/Q88ZnCHVGqzhH8/iPwdCMSqeaHsbSEpoL9p+QuSE+kS+krTr/ULi/Gaa/twm4pkSMMZQgCqn/cmr9h/S4+FSJ5/JY6qXzwZ7oaG2HPc4POaFbqm8Pa+6OE/iS3EX9L2c42akk3So8fNHl2ppBNzaEDDz/N0gRAh/MjBt9aHrQAP7rC2gt5x80wHfvzO0fB23e+u14s2b0+xI7E0zAV7RwHP3leB3JYhncKMIRIdZtBy42DgN5kHEU3nMxWKndLnh/NGjhYdfNO0DJEemaYPgoguBmsXEvLCQj0yo2hTrRHBFVzBpPz3941oKd68i0GD3YHnYgURNM3TkjVzjjRYn9a3QwcOAui5XBUdhxTRqtnkwrMzofTcTgi8VEt6Tx42iul+WhJrv4TFeJG2Ue5RrNNYAPRlWGwgJ5TtWOTNUQ/zQD4lppnmLTxgSYnNQaFzoFfb7iRaYR0T+rij/ndnaViIYhWu9hHSQnNJ9KaNO72Ry8asiuETicL1siTWv4zOUWUXrHMqFm/qUe5MIHX6B0/8N69UPNpYaLwe1KwOA+m4bp1R5p16lWgmfJpgLvJFrp1JuS+amtWu4lM1nH4xNZGMz+oPGB/rktG2waxAeZAYHKGF44ZW0gQM3jPBHBMfpelIk7b3Aro1ZGk2Iql0ewOGT1d2Uy6o32XlcLiQFMFNOP8HazTgHcPQMVSSaJzpUAwYScnvG9WL1txLwd+CP1O48MJJiOwxJhU7hY4JO36cLzVabpJ2FCZee6bnMQpA1cgHWfZA5VOfCv6Jjm148JBSaLyjpqNxoGAJKvg4UjOWrJ5ktD2Bx3pdfT1DoDgwAojprWDtiLYcnt1EI1l9yDSNfFnX50dnhc2NKYFot2Uq4U9bU8/BFv7dRFBiUUZagO9sJFFKFALgsRQ7n8OlvaUmupDuPsRtGMM0HCMMWSL6/CnIOZ0EJb+9lqIJdQmPbnRjRLA9suYGiHwj7j6nMG+0XlRnianLz5JG0jvlRSTy1GGg49pq5GbC0wwXDLvI88LG/XwPGsWDM4LiW1d/Em06fs9Cu3ISFkNhEDOgQ1CYuuBPGpA67/CDfgUAqD/gAfX3USbnmDSI5RIziAXG5+eav3W7UCxaMkPXAVODJ7yC8ymjyOM3ufSgka5BN8kO3aG26qCMzznLQCfW53Do+kUWb3cRWypZtMY+4VACNLii2p4YtPPsVqbHLtc53bOusAV72JUSa54pRBXY+Svl2FB1ZqvwpcbaDiT2gmTUQMT1qTRGR0xhyrNGPenH4FTEMY86Duvov6MsskLsaAR9GqLeXP0hQs/lsP2pmxXeHxJZJiCWTt58xW/c9ZSSR+woe3SbzmyJG1oYU1B3KbuMQEbwqusLH1TGDMQk0Otz2heeLOrM/G86oVbmSIlxFcCbd9fP/of/5Ztv4i4lDaXTG3YVhSOeGAZ6bl3tIYeN6r/EavetCniEGSRL4Y0aeaa7M36yKldoC4NHWb12xp9VQRmBjbOtabnudhn9PVfQBey96VtdTdlOT71xV64a8hIaaO/jOcfYNjOHDO3U7UqCu+1tx6TduWVq5sqxDTjFHWeaIX7uerkXLD5yBZ24PQAIwzlHlmwBLLtj1BFzljMydrRClAJo+zkbt8gDOU/9HSobEw6Q/Z8rYmqjfFHS11sdv/LlF3E25dWPsGgbNpjeZbzBmTsU1QAt8ShUKIZrVRXVWRP1JY5ZGertBP7fsB1TM8PvTSS9aLU+ut6ziXWJV7qp6o5SQd+eAB5b/9kr3nivHW482hGBhsXueYx1VA5OHe2bLStWpXWP15ZXxRI8JLNRIwsCkfBdXJjoEp7E4H6Watp6PPhjvDsfNfvc7J948TFdTuIIhGfz1Um1GldkU4av1Puxjv1GlUxG64pJWrG0TTentGETCSGpodSAYydAzda4jy1hcYd5GC8jxKWFO5jWh8QNzCqyYa8J6C/jgwDaz86L7VZApzqwoi6B4SLC7SrY/wYQLdDY1WFrFA6q3HwQNhCTvU5cQvGB057SioOziU7dp5q05K/E0NK8KuwBQn5F44gDFKQa8ansfVqKC+H3GmQwCi5ddAa5gVcmRgVTQz1a1limyjtQ3DqHq6F/18npK/rTFS1xC8F+hlPbto+zp6bbaUOFOUUkmlP17dH66b37dHu7dIIXwlYP/PfoQQzE6cM5x1EasKBP6lajy0rQLW/jvhlOSJsOa2ph2kG4YHIqbl/T/Vzrk3OCqYEnuKmroONoKcAaCdF/edJ93pcemF7HTOX/eliP+1xXfYT6Q2i9vYY2I3T+8tmq2ycPxWP0AzrUAbdcHfwV6RfMilUJf2GmYey4uCgAXYsAObOb2RRxXiQ9FCBUrBHgMW9Cs0jzSdBMOq2dQVmAozJJaNXE0txu55gsDwoJ/a8vGdR1YwbPL0I4osptg29BPi3TSRcOPFrdDS42kxEPeDjtTacMe2FksLCIXkbTTCtB64oVIfDKJRjktYt4lehxAXfF6dXzfcgsGARr00Amrz/FxsBC9ddwHbUO9cgLCAnOh1klz3BvjxC/gKXanl/zbLCw3wu5Jz9/Tx9J4+cHNF43SiStAogYl4zOQoXbKqMN83ha/rYmo58uWc07C0xalTzbejRJLoG5BH5hgC31LazWdwyimP06TFg1neBDmwDGEhBUMYWvNaoXHmdEhwUdtekn2CL8028IQMC1XMtGM+/V34u7JGxnmWY8UHM5XVzO/EmxC2zBZLDGSzdXlLM+DpLkpxG+r/fYlNq2mQduTynwwh27lBbIREAfxhyL4oqJgPhaVbK4Nqa7vN8GGz9QZpAwTFmc+Pgt0uldSiqW/Hi5dJPTc8LYV1+JoRvqXyjJ+feQJmfknTLX+v0SdcVWfchiBGWZcFKF9pyf8cD/jS9vwYi2bVatwvGCYcGOUYOD5WvJiWbv2unezfokW0xrFcAyhGbmUcv6N6lqPRqkrf1Xn1tfJ2u7YTVko8uR9910o1AUCavEZCcvz74QnpzgUX5DQI+eEsTKLjjm3N6yX813+2LcJ62+335JEn+yVI5Ls2T0gxDB28FbX5QInFOFqKPIcvZYWQi9te5+JZYUrW2EeF27IQs7P+mgGMe5RfLxBir46U3pA4wqTejdKTXp53u0dAGNXoXj7DxVuZ3VInpvOOo/T7bI+MQMfqbDNMqbqcM7W1/hN9y4bKNw8+8tui8vrIp79hP6nYZSjVTPvrVe3ewJfoH6C6Zv0JdGnd8kJi6Uhjd43/JADeBr2HFppAKX6frdDGG/eJCGRXaSA5S5kSNZne35WXVGlbE69O+8cK3/mOCYsZboHQ+2PfYAw8MvJpACSWov3Ygrbkuao++GGKIHYG9pyv0692M/qbVZuRcHvbPbFsUwZUKLs4tB164pVak4b1anHbV9tdadzuAFKvBEjbpb+2yUwj7KR3YsSR95vkP6EqmNvXNdoq1GIO0VmIIV+GMx/0/zPSpDGeARIt3lGwnReNzOT2S6wDAfzFDnVmiMIwoUDHZqXFYMqNinHSvQDZQV7l+9QZCLP6PHJ/JJ6k5L3NsZCjGjxDMMd5BvIFY9Yqnt1IXV90pbrGf6gAc6kdw2K1kIR9T4fDefTeLDOe9mG3QoFmCSI6eDqqY6mF7FnSprVrPysAXEeHY5I1sYks0ODV1axCGXTljnjbGHxVFhwzirDD3x1AOMgDG6d23H2YX1JLg2tv7HIQjlpF24wbfwPc30DwjnGgoFc3PsQtwMF90EZlosckdx9iiLJWMKHQQ/R1Jt38P7qrbzykl+hdvQ2RFxF6unY/+Ia1U4BJRlUmmGH7SeLsVlDg57xndVsxuBGqTY6Ivr48yMpAi9Jo5HfdUVrg/Ap6GR5HZZgzkdFSwjjvstKLUYjJQJIXRmkudwIv4pBAdYjdpFqhUFqJL+gq4Ia0hucaRV/Q9/d+n3g80XSzTbcShEnmUul/KMKTedNLhPQriCk0cpjleJVRD0pgg0efeDCbU6zJ+wEAbHQ6m7EELCG0GH2yWnhArkIhZTXGt++xQzlxzbLF/K3b1m7zvw8OToJio7mbFbn2y8kQQiqMjHUADhxxgnu1B6NNrKDmXmgZCYm3ZHevQj0KDPuYDfk7nhjI02nKdBh+cITtg6FnXxmWg4Gq0uC7kMf1T+lSYcbNOjEsEHyUyI/pUrGPpW/ZVSKcU9yfOhVgt7+N5js5xOZyKBTGj3HuB8y+H4MawSOO4gCQ+fMh6ES6NOnEFyEXW5RVs2D5NxSJTPiM9s3vOw+Bn76n3yDvfXWkaJSaan/LYJ7UNqyB4NoYSh2UpEDpiC5Ie+sbKHnDXd+n1+UX3uBRvWst58DGHDG4DAl4WUQxt0gcZKrYTcSlPFm5QYWzQPqXSZU6cRFFaZD/VuWuQ7iL+8PZeBJK00jrsqXhperYKa+ISrTl7rlDm6JTg6bmniz6iZconXjJb7Z1wR6VlurZ2PizTXkVCqj3oS2Qj03joqKZTl8jrYkO+HuWbxvJuUGPVjEM/rC+1/tXq0DDV69h8RoQQJ9hY6a3pOqeQWIOW3m5yVJXS57QDqpcdWsI3Nd9ZGQJN/aX97L09atB03iGpy3KvXZ/c0Ab+VpEJLX3P4dGr7t1FKnIbiJlwE/qUWRli+ulABhXSuSw96eo/d8ogKpC+Rlg/sjKTr44fPMWTPzPraNDc8cfSC11zd0cmvoQJ7TT7cw5JFyxdise0wzoPHXCY+opN7KHfrIG+uJ6p9Szwr31J5myqEafJe6msXRVOexiU+5n9FzQ3i31e2xIXFj7GFVhshkq5xmMlcYkiPTeq3OkVgrEObrRpXZSqAZrKw2tnrTWtrfLhSnH2rU1bx0Nx2FP3tVTM/0OLpF/h/f0m9+awiSYTrgtSg2t1h9aNowwAsfX5Bboi2WNcyY36e4FNECDxmEz9HA0TjGCQ+oQry+2haYPT9uA5oRpI+lftQKOCcCkWSb28srw3nJHxmdOfBPWUmSf7nceZn9bmtZpBGmSJatzIhwpIDCnG51obVmRHZ1sw/KPDwsKnNloCC8YQGlEl1aumRoacLahdivDTe7Rns/WQgcIOodEDYn4A/pSmxS8NQIv0PaNpKoZGrVq43DKPoF2JUMyc7nlMxCpJrkPvZ6SxEfDuF2d5O+ike0RXuc5ggUlSLBj3JekT+McJUE3jck2GFENq+biEocA9D1ko9WesuJzHaSl5MhXe681cfbcETC8r7k36umxKe2I4v3w5KuFR04GXcgXkxsS2OyXHhfcKjYmOuqXbYNlxYxkRF+ApY/MWOYaQeSXmA2tSwAKgqtrQuPeQGY7lQNjhVsVr2IW0EkKp2MVEYyMg5bZM2sBwvTEtAV9c3uWec6TqGJ4SWLbPtbTx2pWhuKsNpn4ci4BCHNlM5jWjGzH2PvTmKud89e6zpXDTHaHrdSM19tZP6UKZA2C4oypOuriD756TG5eYQ6pw40xHHbj00n0pQpKOVpFNVsulG4xVeTiFSnu3fN1S7i+Iadp5sGCJCRzGt2nmj3tgfTr1RooUpyMpW+8CIoD1SEwLg7gK7iUw8h0lt7dYB68YIky0iMatW3b+DMScECzk5SsMQj6Jz5K0CKNdV+EBXQ6yUMGLzlNVfWpfr8ryxKilWDT/e+YvqTzIJtvY52wsZydrnBiBVGaZJcGBJ4Nsr3PyiFP+01UIxtUUANmlnAMHyRFRxjQsdvVJP1Q/EPtsWOjrSt8Xtri6S5vY07Th/yfZApYMuqfFhuI7MPza0+rPbepHXFG5fw/n1SkuEos9OrYJPI07XD78/yUhGTS0m/aiAZEY1EKiND5E5odxtk6AKRavooazhk3ngcOnVwKUr5xYgOIIEaiGd4N/55nOXAAAAA=", "hoian": "data:image/webp;base64,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"};
+const TRIP_START = new Date(2026,10,6), TRIP_END = new Date(2026,10,18);
+const DEPART = new Date(2026,10,5,12,25);
+
+const STOPS = [
+  {d:"6–9", n:"Ханой", k:"hanoi"},
+  {d:"7–8", n:"Халонг", k:"halong"},
+  {d:"9", n:"Ниньбинь", k:"ninhbinh"},
+  {d:"10–14", n:"Дананг", k:"danang"},
+  {d:"14", n:"Хойан", k:"hoian"},
+  {d:"15–17", n:"Сиемреап", k:"siemreap"},
+  {d:"17–18", n:"Ханой", k:"hanoi"}
+];
+
+const DAYS = [
+ {date:"2026-11-06", wd:"пт", city:"hanoi", title:"Ханой: знакомство с городом", t:"+19…+27°", w:"сухо",
+  flow:["Прилёт в 07:05, трансфер, заселение, отдых","Встреча с гидом","Экскурсия по городу","Возвращение в отель"],
+  places:["vanmieu","tranquoc","mausoleum","hoankiem","oldquarter"],
+  notes:[["wear","Плечи и колени закрыты, удобная обувь, платок"],["warn","Мавзолей по пятницам закрыт и работает только утром: смотрим снаружи"],["tbd","Ранний заезд в отель"],["money","Меняем деньги в этот день"]]},
+ {date:"2026-11-07", wd:"сб", city:"halong", title:"Бухта Халонг: круиз", t:"+18…+25°", w:"ветрено на воде",
+  flow:["Выезд из Ханоя, около 2,5–3 ч","Порт, заселение в каюты, обед на лайнере","Пещера Сюрприз","Остров Титоп, можно плавать","Ночёвка в бухте, ужин, свободное время"],
+  places:["halongbay","sungsot","titop"],
+  notes:[["wear","Купальник, кофта или ветровка на вечер, закрытая обувь"],["wear","Таблетки от укачивания, если нужны"]]},
+ {date:"2026-11-08", wd:"вс", city:"halong", title:"Халонг → Ханой", t:"+18…+25°", w:"утром свежо",
+  flow:["Тай-чи на палубе рано утром","Завтрак до 7:30","Кулинарный мастер-класс","Рыбацкая деревня и музей","Выселение, обед, порт","Трансфер в Ханой, заселение, свободный вечер"],
+  places:["fishing"],
+  notes:[["wear","Утром кофта, днём футболка"]]},
+ {date:"2026-11-09", wd:"пн", city:"ninhbinh", title:"Ниньбинь", t:"+20…+27°", w:"солнце",
+  flow:["Выезд из Ханоя, около 2 ч","Чанган: храмы и пещеры на лодке, около 3 ч","Хангмуа: около 500 ступенек","Возвращение в Ханой"],
+  places:["trangan","hangmua"],
+  notes:[["wear","Кроссовки или сандалии с закрытым носом, головной убор, платок для храмов"],["wear","SPF 50, репеллент, вода: на лодке 3 часа под солнцем"],["tbd","Обед входит в тур?"]]},
+ {date:"2026-11-10", wd:"вт", city:"danang", title:"Перелёт в Дананг", t:"+21…+27°", w:"вероятен дождь",
+  flow:["Трансфер в аэропорт Ханоя","Перелёт в Дананг","Трансфер в отель"],
+  places:[], notes:[["wear","Чемодан до 20 кг"]]},
+ {date:"2026-11-11", wd:"ср", city:"danang", title:"Дананг: отдых", t:"+21…+27°", w:"вероятен дождь",
+  flow:["Отдых в отеле: бассейн, пляж, если позволит погода","SPA или массаж по желанию"],
+  places:["mykhe"], notes:[["wear","Дождевик, быстросохнущие вещи"],["tbd","Подтвердить, что день полностью свободный"]]},
+ {date:"2026-11-12", wd:"чт", city:"danang", title:"Бана-Хиллс и Мраморные горы", t:"внизу +27°, наверху +15…+20°", w:"туман в горах",
+  flow:["Выезд на экскурсию","Гора Бана: фуникулёр, канатная дорога, Золотой мост, Сад любви, пагода Линь Унг","Мраморные горы","Возвращение в отель"],
+  places:["bana","goldenbridge","linhung","marble"],
+  notes:[["wear","Обязательно кофта или ветровка и дождевик: наверху прохладно"],["wear","Удобная обувь, в пагодах плечи и колени закрыты"],["tbd","Какая пагода Линь Унг: на Бана-Хиллс или на Шонча (статуя Гуаньинь)?"]]},
+ {date:"2026-11-13", wd:"пт", city:"danang", title:"Дананг: свободный день", t:"+21…+27°", w:"вероятен дождь",
+  flow:["Пляж, если повезёт с погодой","Если дождь: SPA, массаж, кафе"],
+  places:["mykhe"], notes:[["warn","В ноябре часто волны. Купаемся только там, где разрешено, смотрим на флаги"]]},
+ {date:"2026-11-14", wd:"сб", city:"hoian", title:"Мишон и Хойан", t:"+21…+27°", w:"возможен дождь",
+  flow:["Мишон: храмы королевства Чампа","Хойан: Японский мост, пагода Фук Киен, дом Фунг Хынг","Вечер с фонарями"],
+  places:["myson","hoianold","japbridge","phuckien","phunghung"],
+  notes:[["wear","Мишон: репеллент, вода, головной убор. Хойан вечером: образ для фото и дождевик"],["warn","В ноябре в Хойане бывают подтопления, гид может изменить программу"],["wear","Вечером собираем сумку на Камбоджу"]]},
+ {date:"2026-11-15", wd:"вс", city:"siemreap", title:"Дананг → Ханой → Сиемреап", t:"+23…+31°", w:"жарко",
+  flow:["Трансфер в аэропорт Дананга","Перелёт в Ханой","Перелёт в Сиемреап","Трансфер, заселение, отдых"],
+  places:[],
+  notes:[["tbd","Камера хранения для чемоданов в аэропорту Ханоя"],["wear","С собой ручная кладь до 7 кг, жидкости по 100 мл"],["money","Виза 30 $ наличными при прилёте"],["tbd","Время между рейсами"]]},
+ {date:"2026-11-16", wd:"пн", city:"siemreap", title:"Храмы Ангкора", t:"+23…+31°", w:"солнце, сильный УФ",
+  flow:["Выезд на экскурсию на весь день","Ангкор Ват","Ангкор Тхом и храм Байон","Та Пром, Та Кео","Терраса Слонов и Терраса Прокажённого Короля"],
+  places:["angkorwat","bayon","taprohm","takeo","terraces"],
+  notes:[["warn","Строго закрытые плечи и колени, иначе могут не пустить на верхний ярус Ангкор Вата"],["wear","Кроссовки, головной убор, очки, SPF 50, репеллент, много воды"],["tbd","Входной билет Ангкор Пасс включён? Едем на рассвет?"]]},
+ {date:"2026-11-17", wd:"вт", city:"siemreap", title:"Сиемреап → Ханой", t:"+23…+31°", w:"жарко",
+  flow:["Утром: музей, храм, ботанический сад (практика)","Аэропорт, перелёт в Ханой","Забираем чемоданы, трансфер в отель"],
+  places:["sr_more"], notes:[["wear","Лёгкая одежда, плечи и колени закрыты для храма"]]},
+ {date:"2026-11-18", wd:"ср", city:"hanoi", title:"Ханой и вылет домой", t:"+19…+26°", w:"сухо",
+  flow:["Свободный день: покупки, прогулки, массаж","Выселение обычно до 12:00, чемоданы оставляем в отеле","Трансфер в аэропорт, рейс TK165 в 22:55"],
+  places:["oldquarter"], notes:[["warn","В аэропорту не позже 19:55"],["wear","Покупки укладываем в лимит багажа"]]}
+];
+
+const CITIES = {
+ hanoi:{n:"Ханой",sub:"Столица Вьетнама: храмы, озёра и Старый квартал",img:"hanoi"},
+ halong:{n:"Бухта Халонг",sub:"Ночь на корабле среди известняковых скал",img:"halong"},
+ ninhbinh:{n:"Ниньбинь",sub:"Река, пещеры и вид с горы дракона",img:"ninhbinh"},
+ danang:{n:"Дананг",sub:"Горы, Золотой мост и море",img:"danang"},
+ hoian:{n:"Хойан и Мишон",sub:"Старый торговый порт и святилище Чампа",img:"hoian"},
+ siemreap:{n:"Сиемреап",sub:"Ворота к храмам Ангкора, Камбоджа",img:null}
+};
+
+const PLACES = [
+ {id:"vanmieu",city:"hanoi",n:"Храм Литературы",day:"6.11",q:"Temple of Literature Hanoi",
+  p:"Храм Конфуция, основан в 1070 году. При нём в 1076 году открыли первый университет страны. Пять дворов, пруд и каменные стелы на черепахах с именами выпускников.",
+  tips:["Перед экзаменами сюда приходят студенты: черепах не трогаем, они под охраной","Нужна закрытая одежда"]},
+ {id:"tranquoc",city:"hanoi",n:"Пагода Чан Куок",day:"6.11",q:"Tran Quoc Pagoda",
+  p:"Старейшая пагода Ханоя, ей около 1500 лет. Стоит на маленьком острове на Западном озере. Узнаётся по высокой красной многоярусной башне.",
+  tips:["Красивее всего на закате, у воды"]},
+ {id:"mausoleum",city:"hanoi",n:"Мавзолей Хо Ши Мина и пагода на одном столбе",day:"6.11",q:"Ho Chi Minh Mausoleum",
+  p:"Мавзолей стоит на площади Бадинь, где в 1945 году провозгласили независимость. Рядом пагода на одном столбе (1049 год), она похожа на цветок лотоса над водой.",
+  tips:["6.11 пятница: внутрь не попадём, смотрим снаружи","Строгие правила: без шорт, не шуметь, фото по указанию охраны"]},
+ {id:"hoankiem",city:"hanoi",n:"Озеро Возвращённого Меча (Хоанкием)",day:"6.11",q:"Hoan Kiem Lake",
+  p:"Сердце Ханоя. По легенде, король Ле Лой вернул здесь волшебный меч золотой черепахе. На острове храм Нгокшон, к нему ведёт красный мост Тхехук.",
+  tips:["По выходным вечером улицы вокруг озера закрывают для машин, получается пешеходная зона"]},
+ {id:"oldquarter",city:"hanoi",n:"Старый квартал",day:"6.11 и 18.11",q:"Hanoi Old Quarter",
+  p:"Квартал «36 улиц»: раньше каждая улица была отдана одному ремеслу. Узкие дома-трубки, рынки, уличная еда. Едем на велорикше.",
+  tips:["Улицу переходим медленно и ровно, мотоциклы объедут","18.11 хорошее место для покупок и уличной еды"]},
+
+ {id:"halongbay",city:"halong",n:"Бухта Халонг",day:"7–8.11",q:"Ha Long Bay",
+  p:"Объект ЮНЕСКО: около 1600 известняковых островов и скал в изумрудной воде. Название переводится как «место, где спустился дракон».",
+  tips:["На палубе вечером ветрено, нужна кофта","Напитки на борту, скорее всего, отдельно (уточняем)"]},
+ {id:"sungsot",city:"halong",n:"Пещера Сюрприз (Сунг Сот)",day:"7.11",q:"Sung Sot Cave",
+  p:"Одна из самых больших пещер бухты, два огромных зала со сталактитами и подсветкой. Вход по ступеням в гору.",
+  tips:["Внутри влажно и скользко, нужна закрытая обувь"]},
+ {id:"titop",city:"halong",n:"Остров Титоп",day:"7.11",q:"Ti Top Island",
+  p:"Небольшой остров с пляжем и смотровой площадкой. Наверх ведут несколько сотен ступеней, сверху открывается вид на всю бухту.",
+  tips:["Здесь можно поплавать, вода около +24","Купальник лучше надеть заранее"]},
+ {id:"fishing",city:"halong",n:"Рыбацкая деревня",day:"8.11",q:"Ha Long Bay floating fishing village",
+  p:"Плавучая деревня: дома на понтонах, лодки, рыбные фермы. Рядом небольшой музей о жизни рыбаков в бухте.",
+  tips:["Утром, после тай-чи и завтрака"]},
+
+ {id:"trangan",city:"ninhbinh",n:"Чанган",day:"9.11",q:"Trang An Ninh Binh",
+  p:"Объект ЮНЕСКО: река среди карстовых скал. Плывём на лодке с гребцом около 3 часов, проходим под скалами через пещеры и заходим в храмы.",
+  tips:["Головной убор и SPF обязательно: тени почти нет","В некоторых пещерах низкий свод, придётся пригнуться"]},
+ {id:"hangmua",city:"ninhbinh",n:"Хангмуа",day:"9.11",q:"Hang Mua Ninh Binh",
+  p:"Гора с каменной лестницей примерно в 500 ступенек и статуей дракона на вершине. Это «дракончик» с фото. Сверху видны река и долина.",
+  tips:["Ступени неровные: кроссовки, вода, руки свободны","Подъём займёт около 20–30 минут в спокойном темпе"]},
+
+ {id:"bana",city:"danang",n:"Бана-Хиллс",day:"12.11",q:"Ba Na Hills",
+  p:"Горный курорт на высоте около 1500 м, основан французами в 1919 году. Подъём на канатной дороге над джунглями, наверху Французская деревня, фуникулёр и сады, включая Сад любви.",
+  tips:["Наверху на 7–10 градусов холоднее и часто туман","Кофта и дождевик обязательно"]},
+ {id:"goldenbridge",city:"danang",n:"Золотой мост",day:"12.11",q:"Golden Bridge Da Nang",
+  p:"Мост длиной 150 м, его держат две огромные каменные руки. Открыт в 2018 году и стал символом Вьетнама.",
+  tips:["Для фото без толпы нужно быть пораньше","Если туман, мост может быть почти не виден: ловим момент"]},
+ {id:"linhung",city:"danang",n:"Пагода Линь Унг",day:"12.11",q:"Linh Ung Pagoda Ba Na",
+  p:"В Дананге три пагоды с этим названием. По таблице программы, скорее всего, речь о пагоде на Бана-Хиллс с большой белой статуей Будды. На карточке тура упомянута статуя Гуаньинь: это пагода на полуострове Шонча.",
+  tips:["Уточняем у гида, какая именно","Плечи и колени закрыты"]},
+ {id:"marble",city:"danang",n:"Мраморные горы",day:"12.11",q:"Marble Mountains Da Nang",
+  p:"Пять холмов из мрамора и известняка, их называют по пяти стихиям. Внутри пещеры с алтарями, наверху пагоды и смотровые площадки.",
+  tips:["Много ступеней и скользкий камень в пещерах","На главный холм есть лифт"]},
+ {id:"mykhe",city:"danang",n:"Пляж Микхе",day:"11 и 13.11",q:"My Khe Beach",
+  p:"Длинный городской пляж с белым песком. В ноябре вода около +26, но часто бывают волны и течения.",
+  tips:["Купаемся у спасателей, смотрим на флаги","Если дождь, вместо пляжа SPA"]},
+
+ {id:"myson",city:"hoian",n:"Святилище Мишон",day:"14.11",q:"My Son Sanctuary",
+  p:"Объект ЮНЕСКО: кирпичные индуистские храмы королевства Чампа IV–XIII веков в долине среди гор. Часть храмов пострадала во время войны.",
+  tips:["Жарко и влажно, много комаров: репеллент, вода, шляпа","Неровные дорожки, нужна закрытая обувь"]},
+ {id:"hoianold",city:"hoian",n:"Старый город Хойан",day:"14.11",q:"Hoi An Ancient Town",
+  p:"Объект ЮНЕСКО, торговый порт XV–XIX веков. Жёлтые дома, китайские общинные дома, вечером тысячи шёлковых фонарей и лодки на реке Тхубон.",
+  tips:["Вечером можно пустить фонарик по реке","В ноябре бывают подтопления"]},
+ {id:"japbridge",city:"hoian",n:"Японский мост",day:"14.11",q:"Japanese Covered Bridge Hoi An",
+  p:"Крытый мост конца XVI века, построенный японской общиной. Внутри маленький храм. Мост изображён на купюре 20 000 донгов.",
+  tips:["Сравните с купюрой, отличное фото"]},
+ {id:"phuckien",city:"hoian",n:"Ассамблея Фукиен (Фук Киен)",day:"14.11",q:"Phuc Kien Assembly Hall Hoi An",
+  p:"Самый нарядный общинный дом китайцев из провинции Фуцзянь. Посвящён богине моря Тхьен Хау, покровительнице мореходов.",
+  tips:["Внутри спирали благовоний под потолком"]},
+ {id:"phunghung",city:"hoian",n:"Дом Фунг Хынг",day:"14.11",q:"Phung Hung Old House Hoi An",
+  p:"Купеческий дом 1780 года, в нём до сих пор живёт одна семья. В архитектуре смешаны вьетнамский, японский и китайский стили.",
+  tips:["Деревянная лестница крутая, поднимаемся аккуратно"]},
+
+ {id:"angkorwat",city:"siemreap",n:"Ангкор Ват",day:"16.11",q:"Angkor Wat",
+  p:"Самый большой религиозный памятник в мире, построен в XII веке при короле Сурьявармане II. Пять башен в виде цветков лотоса, изображены на флаге Камбоджи.",
+  tips:["На верхний ярус пускают только в закрытой одежде","Ангкор Пасс на 1 день стоит около 37 $: уточняем, входит ли в тур"]},
+ {id:"bayon",city:"siemreap",n:"Ангкор Тхом и храм Байон",day:"16.11",q:"Bayon Temple",
+  p:"Ангкор Тхом — древняя столица кхмеров за стенами и воротами с ликами. В центре храм Байон: десятки башен с огромными спокойно улыбающимися лицами.",
+  tips:["Лучший свет для лиц утром"]},
+ {id:"taprohm",city:"siemreap",n:"Та Пром",day:"16.11",q:"Ta Prohm",
+  p:"Храм, который почти поглотили джунгли: корни огромных деревьев обвивают стены. Здесь снимали «Лару Крофт».",
+  tips:["Ходим только по настилам, к корням не прислоняемся"]},
+ {id:"takeo",city:"siemreap",n:"Та Кео",day:"16.11",q:"Ta Keo",
+  p:"Храм-гора из песчаника конца X века, так и не достроенный: на стенах почти нет резьбы. Очень крутые ступени.",
+  tips:["Подъём крутой, лучше без сумок в руках"]},
+ {id:"terraces",city:"siemreap",n:"Терраса Слонов и Терраса Прокажённого Короля",day:"16.11",q:"Terrace of the Elephants",
+  p:"Длинные каменные платформы с резьбой: слоны, гаруды, демоны. С Террасы Слонов король смотрел на парады.",
+  tips:["Короткая остановка, хорошо для фото"]},
+ {id:"sr_more",city:"siemreap",n:"Музей, храм и ботанический сад",day:"17.11",q:"Siem Reap",
+  p:"Утренняя программа перед вылетом в Ханой. Какие именно музей и храм, пока неизвестно. Ботанический сад указан в программе как практика.",
+  tips:["Уточняем у гида названия и время выезда"]}
+];
+
+const PACK = [
+ {g:"Обувь (не новая)",i:["Кроссовки или сандалии с закрытым носом","Сандалии или шлёпанцы для пляжа и дождя","Красивая обувь для ужинов и фото"]},
+ {g:"Одежда",i:["Лёгкие футболки и рубашки свободного кроя","Шорты","Брюки, юбка или платье ниже колена (храмы)","Кофта или кардиган","Тонкая ветровка","Палантин или платок","Головной убор","Солнцезащитные очки","Купальник","Наряд на выход","Быстросохнущие вещи для Дананга"]},
+ {g:"Погода и солнце",i:["Дождевик","SPF 50","Репеллент (можно купить на месте)"]},
+ {g:"Аптечка",note:"По составу и дозировкам лучше посоветоваться с врачом",i:["Свои постоянные лекарства с запасом","От диареи и отравления, сорбент, регидратация","Жаропонижающее и обезболивающее","От аллергии","От укачивания","От простуды и горла","Пластыри, в том числе от мозолей, антисептик","Средство после загара"]},
+ {g:"Документы и деньги",i:["Паспорт (действует 6+ месяцев после поездки)","Копия паспорта","Распечатки билетов","Страховка (лучше расширенная)","1540 $ новыми долларами на доплату","30 $ на визу в Камбоджу","Деньги на личные расходы"]},
+ {g:"Техника",i:["Переходник (розетки A, C, F)","Пауэрбанк (только в ручной клади)","eSIM или план купить местную SIM","Зарядки"]},
+ {g:"Сумка на Камбоджу, до 7 кг",i:["2 комплекта одежды, один закрытый для храмов","Пижама","Купальник","Косметика во флаконах до 100 мл","Зарядки, аптечка, документы, наличные"]}
+];
+
+const LORE = {
+ vanmieu:{
+  h:"Храм основал император Ли Тхань Тонг в 1070 году в честь Конфуция. В 1076 году рядом открылась императорская академия Куоктузям, первая в стране. Позже здесь учили будущих чиновников, а в 1484 году начали ставить каменные стелы с именами тех, кто сдал государственные экзамены. До наших дней дошли 82 стелы.",
+  s:"Это храм знания как пути к добродетели. В конфуцианстве учёба считается способом стать достойным человеком и служить обществу, а не просто получить должность. Черепаха под стелой — символ долголетия и мудрости, одно из четырёх священных животных Вьетнама. Студенты и сегодня приходят сюда перед экзаменами просить удачи."},
+ tranquoc:{
+  h:"По преданию, пагоду основали в VI веке, при императоре Ли Нам Де, на берегу Красной реки. В 1615 году из-за размыва берега её перенесли на остров Западного озера, где она стоит сейчас. Одиннадцатиярусная башня-ступа появилась в конце XX века.",
+  s:"Пагода относится к буддизму Махаяны. У входа растёт дерево бодхи: это отросток от того самого дерева в Бодхгае, под которым Будда достиг просветления. Его привезли из Индии в 1959 году в дар Вьетнаму. В каждом ярусе башни стоит статуя Будды, а сама ступа считается местом сохранения святости и покоя посреди шумного города."},
+ mausoleum:{
+  h:"Хо Ши Мин умер 2 сентября 1969 года. Он просил кремировать его и развеять прах, но мавзолей построили при помощи советских специалистов и открыли в 1975 году. Пагода на одном столбе, Тьюа Мот Кот, старше на тысячу лет: её построили в 1049 году при императоре Ли Тхай Тонге. В 1954 году её разрушили при отступлении французов, потом восстановили.",
+  s:"Пагода — это воплощение сна. Императору, у которого долго не было сына, приснилось, что бодхисаттва Гуаньинь на лотосе вручила ему мальчика. Он построил храм в форме цветка лотоса на одном столбе, и вскоре у него родился наследник. Лотос во вьетнамской традиции означает чистоту, рождающуюся из ила. Мавзолей же выражает почитание «дяди Хо» как отца нации: это продолжение культа предков, только в масштабе всей страны."},
+ hoankiem:{
+  h:"Озеро связано с борьбой против китайской династии Мин в XV веке. Ле Лой, будущий основатель династии Ле, возглавил восстание и победил. Храм Нгокшон на острове появился в XIX веке, его посвятили полководцу Чан Хынг Дао, отразившему монгольские нашествия, и другим почитаемым фигурам. Красный мост Тхехук называют «лучом утреннего солнца».",
+  s:"Легенда говорит, что Ле Лой получил от бога-дракона волшебный меч и победил с ним врагов. Потом, когда он катался на лодке по озеру, из воды поднялась золотая черепаха и попросила меч обратно. Смысл в том, что оружие дано, чтобы защитить народ, а в мирное время его возвращают. Черепаха в этой истории хранительница мира, поэтому озеро считается сердцем города и местом, где у власти есть граница."},
+ oldquarter:{
+  h:"Ханой основан в 1010 году под названием Тханглонг, «возносящийся дракон». Старый квартал вырос вокруг дворца как кварталы ремесленников и торговцев, которые приходили из окрестных деревень. Каждая гильдия селилась на отдельной улице: отсюда названия вроде «Ханг Бак» (серебро) или «Ханг Бонг» (хлопок).",
+  s:"У каждой гильдии был свой общинный храм, динь, где почитали покровителя ремесла как предка, давшего людям мастерство. До сих пор в лавках и домах стоят алтари, на них в первый и пятнадцатый дни лунного месяца ставят фрукты, цветы и благовония. Для вьетнамцев торговля идёт рука об руку с памятью о предках: умерший остаётся членом семьи и «помогает» делу."},
+ halongbay:{
+  h:"С 1994 года бухта в списке ЮНЕСКО. Известняковые острова формировались сотни миллионов лет, а уровень моря не раз менялся. Много веков здесь жили рыбаки, а в ранней истории Вьетнама бухту использовали как рубеж обороны: в её узких протоках вьетнамцы не раз разбивали вражеские флоты.",
+  s:"Вьетнамская легенда говорит, что когда страну атаковали с моря, боги послали семью драконов. Они плюнули нефритом и драгоценностями, те стали островами и стеной преградили путь врагам. Драконы так полюбили эту землю, что остались жить в бухте. Дракон во Вьетнаме означает воду, дождь и защиту, а вьетнамцы называют себя потомками дракона и феи. Поэтому бухта для них не просто пейзаж, а дом предков."},
+ sungsot:{
+  h:"Пещеру в 1901 году обнаружили французы и назвали её Grotte des Surprises, то есть «пещера сюрпризов». Вьетнамское название «Сунг Сот» означает «изумление». Внутри два главных зала, в верхнем сводчатом сталактиты и сталагмиты образуют причудливые формы.",
+  s:"В народных представлениях пещеры — жилища духов и место силы. Формы сталактитов принято «читать» как фигуры: черепаху, льва, фигуру будды и другое. Это приглашение к воображению, но и память о том, что природа и мир духов не разделены. Прохладная тёмная пещера с отверстиями в своде как бы напоминает путь из тьмы к свету."},
+ titop:{
+  h:"Остров назван в 1962 году в честь советского космонавта Германа Титова: он приезжал в бухту вместе с Хо Ши Мином, и остров ему «подарили». Вьетнамское «Ти Топ» — это искажённое «Титов». С вершины, куда ведут около 400 ступеней, открывается вид на всю бухту.",
+  s:"Это не храм: смысл места памятный и светский. Он напоминает о дружбе Вьетнама и СССР и о том, как космическая эпоха вошла и в местные названия. Священным остаётся сама бухта, в которой остров находится: подъём наверх можно воспринимать как небольшое паломничество, чтобы увидеть «спину дракона» целиком."},
+ fishing:{
+  h:"Плавучие деревни рыбаков (Куа Ван, Ча Ко, Вунг Вьен) существовали в бухте много поколений: семьи жили на лодках и плотах, ловили рыбу, выращивали морепродукты. В последние десятилетия власти переселяют многих жителей на берег, чтобы сохранить воду чистой, поэтому часть домов теперь приспособлена под туристов и разведение рыбы.",
+  s:"Море для рыбаков мать-кормилица. На лодках и плотах обычно есть маленькие алтари предков и духа-покровителя воды, и перед выходом в море зажигают благовония и просят о спокойной воде. Так жили в согласии с драконом бухты: брали у моря столько, сколько нужно, и благодарили его."},
+ trangan:{
+  h:"Рядом находится Хоалы, древняя столица Вьетнама при династиях Динь и Ранняя Ле (X век). Её выбрали за естественную защиту: скалы и реки служили крепостной стеной. Чанган с 2014 года в списке ЮНЕСКО как место, сочетающее природное и культурное наследие. Река ведёт мимо храмов, посвящённых императорам и местным духам.",
+  s:"Для вьетнамцев это земля первых императоров, объединивших страну. По пути на лодке видны небольшие храмы с алтарями предков государства, и им воздают почести, как родителям. Скалы воспринимаются как стражи долины, а вода как путь, по которому приходят благословения. Лодочник на вёслах — часть ритуала тишины, в котором приходят в святилище."},
+ hangmua:{
+  h:"Название переводят как «пещера танцев». У подножия горы находится пещера с небольшими алтарями, а выше по склону пагода. Каменную лестницу в 500 ступеней проложили для паломников и туристов, на вершине стоит каменный дракон, это современное украшение.",
+  s:"Подъём здесь символизирует путь паломника: каждая ступень требует усилия, а награда в виде вида на долину и реку приходит на вершине. Дракон на гребне горы стережёт долину и, по народной вере, защищает землю первых императоров. Наверху бывают алтари с подношениями: местные приходят помолиться о здоровье и удаче."},
+ bana:{
+  h:"Французы основали здесь в 1919 году горную станцию, чтобы спасаться от жары на побережье. Тогда были построены отели, виллы и дорога, но в 1945 году колониальный курорт опустел, постройки разрушались. После 2009 года курорт перестроили с новой канатной дорогой, Французской деревней и садами.",
+  s:"Сам курорт светский. Сакральная часть — комплекс пагоды Линь Унг и белая статуя Будды на склоне. Вьетнамцы приезжают сюда и ради прохлады, и помолиться. Это место, где соединились французская ностальгия, горная природа и буддийская традиция: туман на вершине воспринимают как граница между миром людей и небесным."},
+ goldenbridge:{
+  h:"Мост открыли в июне 2018 года. Его спроектировала вьетнамская студия, и 150-метровый пешеходный пролёт подвесили на высоте около 1400 м. Он быстро стал одним из самых узнаваемых символов страны.",
+  s:"Это современное сооружение, а не древняя святыня. Образ двух каменных рук, которые держат золотую ленту дороги, похож на старый мотив: земля или богиня поддерживает человека на пути. Руки состарены, обросли «мхом»: мост хотели показать как часть горы, а не как чужое тело на ней. Хороший момент, чтобы остановиться и принять высоту и туман как благословение."},
+ linhung:{
+  h:"В Дананге три пагоды Линь Унг. Пагода на полуострове Шонча освящена около 2010 года, на фоне моря стоит статуя Гуаньинь высотой 67 м, одна из самых высоких во Вьетнаме. Пагода на Бана-Хиллс новее, с белой статуей Будды. Третья находится на Мраморных горах и гораздо старше.",
+  s:"Гуаньинь, по-вьетнамски Куан Ам, — бодхисаттва сострадания, «та, что слышит звуки мира». Моряки и рыбаки просят у неё защиты в море, и считается, что статуя обращена к воде, чтобы оберегать город от штормов. Белая статуя Будды на Бана-Хиллс отражает идею чистоты и спокойствия. Какая именно пагода будет в программе, мы уточняем."},
+ marble:{
+  h:"Пять холмов называют Нгуханьшон. Их имена связаны с пятью стихиями: металл, дерево, вода, огонь и земля. Чамы использовали пещеры как святилища индуизма ещё в Средние века, затем здесь появились буддийские храмы. В XIX веке император Минь Манг дал холмам имена, а во время войны в пещерах размещались госпиталь и укрытие.",
+  s:"Пять стихий описывают устройство мира в китайской и вьетнамской космологии, поэтому место воспринимается как модель вселенной. В пещерах стоят алтари Будды, а спуск в тёмную пещеру и подъём к свету понимают как путь от неведения к просветлению. Самые известные пещеры, Хуенконг и Ванг Тхонг, хранят статуи и скальные надписи."},
+ mykhe:{
+  h:"В 1965 году в Дананге высадились американские морские пехотинцы, и при войне пляж стал местом отдыха солдат, которое они называли China Beach. Сейчас это городской пляж с белым песком, длиной около 10 км.",
+  s:"Это светское место, но в прибрежных деревнях центрального Вьетнама почитают кита как морского хранителя, Ка Онг, и на берегу встречаются небольшие святилища ему. По традиции прибитого к берегу кита хоронят с почестями как умершего предка. Пляж напоминает, что море здесь и источник жизни, и опасность."},
+ myson:{
+  h:"Святилище основал в конце IV века король Чампы Бхадраварман. Храмы строили вплоть до XIII века, здесь короли проходили обряды и почитали предков. Для европейцев место открыл в 1898 году французский исследователь Камиль Пари. В 1969 году американские бомбардировки разрушили много башен, но святилище с 1999 года в списке ЮНЕСКО.",
+  s:"Главное святилище посвящено Шиве в образе Бхадрешвары: соединение имени царя и бога означало, что царь правит как его воплощение. Башни символизируют гору Меру, центр вселенной в индуизме, а внутри стоят лингам и йони, образы творческой силы. Вход обычно обращён на восток, к восходящему солнцу. Кирпичные башни собирали без видимого раствора, и секрет кладки до сих пор обсуждают."},
+ hoianold:{
+  h:"Хойан, в прошлом Файфо, в XV–XIX веках был крупным портом, куда приходили японские, китайские, голландские и португальские купцы. Река Тхубон со временем обмелела, порт утратил значение, и город «заснул», поэтому сохранились старые дома. В войну его, к счастью, почти не бомбили. Город внесён в список ЮНЕСКО в 1999 году.",
+  s:"В ночь полнолуния, 14-го дня лунного месяца, в Хойане гасят электрический свет, зажигают фонари и свечи, делают подношения предкам и пускают по реке бумажные лодочки с огоньками. Фонарики здесь означают благословение, память о предках и желание, которое уносит вода. Свет в этой традиции символизирует жизнь и доброе начало."},
+ japbridge:{
+  h:"Мост по традиции датируют 1593 годом, его построила японская община, жившая в квартале. Японцы в 1630-х закрыли страну, и их связь с городом прервалась, но мост остался. Он изображён на купюре в 20 000 донгов.",
+  s:"По легенде, под землёй живёт огромное чудовище Мамадзу, его голова в Индии, хвост в Японии, а тело лежит под Вьетнамом. Когда оно шевелится, происходят землетрясения. Мост, как меч, «пригвоздил» чудовище к земле. На концах моста стоят статуи собаки и обезьяны: по преданию, строительство началось в год обезьяны и закончилось в год собаки. Внутри мостового храма почитают бога-покровителя вод и духов Чан Ву."},
+ phuckien:{
+  h:"Общинный дом построили в 1690 году китайские переселенцы из провинции Фуцзянь. Сначала это было место встреч землячества, потом храм. Роскошные ворота, резные потолки и дворик отражают богатство торговых семей.",
+  s:"Здесь почитают Тхьен Хау, богиню моря и покровительницу мореходов, в Китае её называют Мацзу. Купцы благодарили её за благополучное плавание и просили защиты на следующий. Под потолком висят спирали благовоний с табличками имён и желаний, они горят неделями. Рядом стоят фигуры стражей богини: «Тысячу ли видящего» и «Попутный ветер слышащего»."},
+ phunghung:{
+  h:"Дом возвели в 1780 году, и в нём уже около семи поколений живёт одна семья. Дом совмещает вьетнамские, японские и китайские черты. Он был связан с рекой: торговцы получали товар прямо с лодки, а хозяева могли держать склад и жилые комнаты под одной крышей.",
+  s:"Центр дома — семейный алтарь предков. Его ставят в самой важной части дома, и семья приносит ему фрукты, цветы и благовония, особенно в лунные праздники. Так живёт идея, что ушедшие предки остаются частью семьи и присматривают за домом. Поэтому дом хранят и передают из поколения в поколение как живое целое."},
+ angkorwat:{
+  h:"Храм построил король Сурьяварман II в первой половине XII века как государственный храм, посвящённый Вишну. Позже, в XIV–XV веках, он стал буддийским. В отличие от других, Ангкор Ват не забывали: за ним ухаживали монахи, поэтому он хорошо сохранился. С 1992 года в списке ЮНЕСКО.",
+  s:"Храм воплощает гору Меру, центр вселенной в индуизме: пять башен — вершины горы, стены — горные хребты, а ров — мировой океан. Вход ориентирован на запад, сторону заката, которую связывают с Вишну и со смертью, поэтому храм считают и мавзолеем короля. Барельефы рассказывают о «пахтании молочного океана», Рамаяне и Махабхарате. Движение по галереям — это путь от мирского к божественному."},
+ bayon:{
+  h:"Храм построил в конце XII — начале XIII века король Джаяварман VII после того, как отразил нападение чамов, разграбивших Ангкор в 1177 году. Он правил как буддист Махаяны и перестроил столицу — Ангкор Тхом, «Великий город». У входов в город стоят ряды божеств и демонов, которые держат змею.",
+  s:"Огромные лица на башнях считают ликами бодхисаттвы Локешвары, воплощения сострадания, и одновременно портретом короля-бодхисаттвы. Лица смотрят на все четыре стороны света: это образ заботы, которая охватывает всё царство. Спокойная «кхмерская улыбка» выражает мир и сострадание. Иногда лица трактуют как четыре безмерные добродетели буддизма."},
+ taprohm:{
+  h:"Храм построили в 1186 году по приказу Джаявармана VII и посвятили его матери короля. В надписи сказано, что для храма трудились тысячи людей и обслуживали деревни. Реставраторы намеренно оставили его в «найденном» виде, лишь укрепили стены и расчистили проходы, поэтому корни деревьев остались.",
+  s:"Главная статуя храма изображала мать короля как Праджняпарамиту — богиню запредельной мудрости. Гигантские корни, которые обвивают камень, воспринимаются как напоминание буддийской идеи непостоянства: всё созданное людьми со временем возвращается природе. Вместе с тем храм остаётся актом сыновней благодарности."},
+ takeo:{
+  h:"Храм начали строить в конце X века при Джаявармане V и продолжали при Сурьявармане I в начале XI века, но не закончили. Причины неизвестны: по одной из версий, в храм ударила молния, и это сочли дурным знаком. Стены остались без резьбы, и архитектура видна «в чистом виде».",
+  s:"Храм посвящён Шиве и повторяет форму горы Меру: пять башен на высокой пирамиде. Очень крутые ступени символизируют тяжёлый путь к богам: чтобы приблизиться к божеству, нужны усилия и смирение. Недостроенность тоже содержит урок: даже самые великие замыслы остаются во власти судьбы."},
+ terraces:{
+  h:"Терраса Слонов тянется примерно на 350 м и относится к времени Джаявармана VII. С неё король и двор наблюдали за парадами и возвращением войск. Терраса Прокажённого Короля, высотой около 7 м, названа так из-за статуи, потемневшей от мха и похожей на больного. Статую связывают с Ямой, богом смерти.",
+  s:"Слоны на стенах — образ силы и защиты, они напоминают о небесном слоне Айравате, на котором ездит бог Индра. Птицы Гаруды — спутники Вишну. Терраса Прокажённого Короля, возможно, связана с погребальными обрядами: Яма судит умерших. Легенда о короле с проказой напоминает, что власть не освобождает от болезни и смерти."},
+ sr_more:{
+  h:"Название города «Сиемреап» буквально значит «Сиам побеждён»: оно сохранило память о победе кхмеров над сиамцами в XVI веке. Какие именно музей и храм нам покажут, пока неизвестно.",
+  s:"Когда гид назовёт места, мы добавим сюда их историю. Пока в Камбодже стоит помнить: храмы там остаются живыми, к ним приходят монахи и местные жители, а подношения у статуй не трогают."}
+};
+
+const TAGS = {wear:["t-wear","Взять"],warn:["t-warn","Важно"],tbd:["t-tbd","Уточняем"],money:["t-money","Деньги"]};
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store = {
+  get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+const placeById = Object.fromEntries(PLACES.map(p=>[p.id,p]));
+const today = new Date(); today.setHours(0,0,0,0);
+const iso = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const todayIso = iso(today);
+
+/* hero status */
+(function(){
+  const s = $("#status");
+  const msDay = 864e5;
+  let html;
+  if (today < new Date(2026,10,5)) {
+    const n = Math.round((new Date(2026,10,5) - today)/msDay);
+    html = `<b>${n}</b><small>${plural(n,"день","дня","дней")} до вылета · 5 ноября, 12:25 из Минска</small>`;
+  } else if (today <= TRIP_END) {
+    const n = Math.round((today - TRIP_START)/msDay)+1;
+    html = n<1 ? `<b>В пути</b><small>Стамбул → Ханой, прилёт 6.11 в 07:05</small>` : `<b>День ${n} из 13</b><small>Программа на сегодня отмечена в маршруте</small>`;
+  } else {
+    html = `<b>Поездка завершена</b><small>6–18 ноября 2026</small>`;
+  }
+  s.innerHTML = html;
+  const curCity = (DAYS.find(d=>d.date===todayIso)||{}).city;
+  $("#strip").innerHTML = STOPS.map(st=>`<div class="stop${st.k===curCity?" now":""}"><span class="d">${st.d} ноя</span>${st.n}</div>`).join("");
+})();
+function plural(n,a,b,c){const m=n%10,h=n%100;if(m===1&&h!==11)return a;if(m>=2&&m<=4&&(h<12||h>14))return b;return c}
+
+/* map: positions projected from real coordinates */
+(function(){
+  const pts = {hanoi:[21.03,105.85,"Ханой"],halong:[20.95,107.08,"Халонг"],ninhbinh:[20.25,105.97,"Ниньбинь"],danang:[16.05,108.20,"Дананг"],hoian:[15.88,108.33,"Хойан"],siemreap:[13.36,103.86,"Сиемреап"]};
+  const lonMin=103.2, lonMax=109.2, latMin=12.8, latMax=21.8;
+  const P = k => { const [la,lo]=pts[k]; return [20+(lo-lonMin)/(lonMax-lonMin)*300, 18+(latMax-la)/(latMax-latMin)*262]; };
+  const legs = [["hanoi","halong","road"],["halong","hanoi","road"],["hanoi","ninhbinh","road"],["hanoi","danang","air"],["danang","hoian","road"],["danang","hanoi","air"],["hanoi","siemreap","air"]];
+  let svg = `<g fill="none" stroke-linecap="round">`;
+  const seen = new Set();
+  legs.forEach(([a,b,t])=>{const key=[a,b].sort().join(t); if(seen.has(key))return; seen.add(key);
+    const [x1,y1]=P(a),[x2,y2]=P(b); const mx=(x1+x2)/2+(t==="air"?(y2-y1)*0.18:0), my=(y1+y2)/2-(t==="air"?(x2-x1)*0.18:0);
+    svg += `<path d="M${x1} ${y1} Q${mx} ${my} ${x2} ${y2}" stroke="var(--${t==="air"?"sky":"gold"})" stroke-width="2" ${t==="air"?'stroke-dasharray="5 5"':''}/>`;});
+  svg += `</g>`;
+  const lab = {hanoi:[-8,-10,"end"],halong:[8,-8,"start"],ninhbinh:[-8,16,"end"],danang:[-10,-6,"end"],hoian:[8,16,"start"],siemreap:[10,4,"start"]};
+  Object.keys(pts).forEach(k=>{const [x,y]=P(k);const [dx,dy,an]=lab[k];
+    svg += `<circle cx="${x}" cy="${y}" r="5" fill="var(--jade)" stroke="var(--gold)" stroke-width="2"/><text x="${x+dx}" y="${y+dy}" text-anchor="${an}" font-family="Manrope, sans-serif" font-size="12" font-weight="600" fill="var(--ink)">${pts[k][2]}</text>`;});
+  svg += `<text x="22" y="296" font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)">— дорога     - - перелёт     схема, без масштаба побережья</text>`;
+  svg += `<g font-family="IBM Plex Mono, monospace" font-size="10" fill="var(--muted)" letter-spacing="1.5"><text x="170" y="190">ВЬЕТНАМ</text><text x="40" y="215">КАМБОДЖА</text></g>`;
+  $("#map").innerHTML = svg;
+})();
+
+/* days */
+$("#days").innerHTML = DAYS.map(d=>{
+  const [y,m,dd]=d.date.split("-");
+  const isToday = d.date===todayIso;
+  return `<article class="day${isToday?" today":""}" id="day-${dd}">
+    <div class="dayhead"><div><div class="date">${+dd}.${m} · ${d.wd}${isToday?" · сегодня":""}</div><h3>${esc(d.title)}</h3></div>
+    <span class="wx"><i>${esc(d.t)}</i>· ${esc(d.w)}</span></div>
+    <ul class="flow">${d.flow.map(f=>`<li>${esc(f)}</li>`).join("")}</ul>
+    ${d.places.length?`<div class="chips">${d.places.map(id=>`<button class="chip" type="button" data-place="${id}">${esc(placeById[id].n)}</button>`).join("")}</div>`:""}
+    <div class="notes">${d.notes.map(([t,x])=>`<div class="note"><span class="tag ${TAGS[t][0]}">${TAGS[t][1]}</span><span>${esc(x)}</span></div>`).join("")}</div>
+  </article>`;}).join("");
+
+/* places */
+const MOUNTAINS = `<svg viewBox="0 0 300 120" aria-hidden="true"><g fill="#f1ead6"><rect x="40" y="70" width="220" height="6"/><path d="M60 70 L80 30 L100 70Z"/><path d="M200 70 L220 30 L240 70Z"/><path d="M120 70 L130 40 L140 18 L150 4 L160 18 L170 40 L180 70Z"/><path d="M95 70 L105 48 L115 70Z"/><path d="M185 70 L195 48 L205 70Z"/></g></svg>`;
+let cityF = "all";
+function renderPlaces(){
+  const cities = Object.keys(CITIES);
+  $("#cityFilter").innerHTML = [["all","Все"],...cities.map(c=>[c,CITIES[c].n])].map(([k,n])=>`<button type="button" data-city="${k}" aria-pressed="${cityF===k}">${n}</button>`).join("");
+  $("#places").innerHTML = cities.filter(c=>cityF==="all"||cityF===c).map(c=>{
+    const C = CITIES[c];
+    const head = C.img ? `<div class="cityhead"><img src="${IMG[C.img]}" alt="${esc(C.n)}"><div class="cap"><h2>${esc(C.n)}</h2><p>${esc(C.sub)}</p></div></div>`
+                       : `<div class="cityhead noimg">${MOUNTAINS}<div class="cap"><h2>${esc(C.n)}</h2><p>${esc(C.sub)}</p></div></div>`;
+    return `<section class="city" id="city-${c}">${head}${PLACES.filter(p=>p.city===c).map(p=>`
+      <article class="place" id="pl-${p.id}">
+        <div class="meta"><span>${esc(p.day)} ноя</span></div>
+        <h3>${esc(p.n)}</h3>
+        <p>${esc(p.p)}</p>
+        ${LORE[p.id]?`<div class="lore"><h4>История</h4><p>${esc(LORE[p.id].h)}</p><h4>Сакральный смысл</h4><p>${esc(LORE[p.id].s)}</p></div>`:""}
+        <ul class="tips">${p.tips.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>
+        <a class="maplink" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.q)}" target="_blank" rel="noopener">Открыть на карте ↗</a>
+      </article>`).join("")}</section>`;}).join("");
+}
+$("#cityFilter").addEventListener("click",e=>{const b=e.target.closest("button[data-city]");if(!b)return;cityF=b.dataset.city;renderPlaces();});
+renderPlaces();
+document.addEventListener("click",e=>{const c=e.target.closest(".chip[data-place]");if(!c)return;
+  cityF="all";renderPlaces();show("places");const el=document.getElementById("pl-"+c.dataset.place);
+  if(el){el.scrollIntoView({behavior:"smooth",block:"start"});el.style.borderColor="var(--gold)";setTimeout(()=>el.style.borderColor="",1600);}});
+
+/* packing */
+let packed = store.get("vn26-pack",{});
+function renderPack(){
+  let total=0,done=0;
+  $("#pack").innerHTML = PACK.map((g,gi)=>{
+    const items = g.i.map((t,ii)=>{const k=gi+"-"+ii;total++;const on=!!packed[k];if(on)done++;
+      return `<label class="check${on?" done":""}"><input type="checkbox" id="pk-${k}" data-k="${k}"${on?" checked":""}><span>${esc(t)}</span></label>`;}).join("");
+    const gDone = g.i.filter((_,ii)=>packed[gi+"-"+ii]).length;
+    return `<div class="group"><h3>${esc(g.g)}<small>${gDone}/${g.i.length}</small></h3>${g.note?`<p class="toast" style="margin:0 0 6px">${esc(g.note)}</p>`:""}${items}</div>`;}).join("");
+  $("#packBar").style.width = (total?done/total*100:0)+"%";
+  $("#packMeta").textContent = `Собрано ${done} из ${total}`;
+}
+$("#pack").addEventListener("change",e=>{const k=e.target.dataset.k;if(!k)return;packed[k]=e.target.checked;if(!packed[k])delete packed[k];store.set("vn26-pack",packed);renderPack();});
+let resetArmed=false;
+$("#packReset").addEventListener("click",()=>{
+  if(!resetArmed){resetArmed=true;$("#packReset").textContent="Точно снять все?";$("#resetMsg").textContent="Нажмите ещё раз для подтверждения";setTimeout(()=>{resetArmed=false;$("#packReset").textContent="Снять все отметки";$("#resetMsg").textContent="";},4000);return;}
+  packed={};store.set("vn26-pack",packed);resetArmed=false;$("#packReset").textContent="Снять все отметки";$("#resetMsg").textContent="Отметки сняты";renderPack();});
+renderPack();
+
+/* money */
+const M = store.get("vn26-money",{meal:7,special:2,snacks:4,sim:15,spa:60,shop:100,tips:30});
+const FIELDS = [
+ {k:"meal",l:"Обед или ужин в кафе",min:5,max:15,step:1,fmt:v=>v+" $ × 23",calc:v=>v*23,hint:"Около 23 приёмов пищи вне тура. Ориентир 5–10 $"},
+ {k:"special",l:"Ужины в красивых местах",min:0,max:4,step:1,fmt:v=>v+" × 30 $",calc:v=>v*30,hint:"Дананг и Камбоджа, около 30 $ за ужин, по желанию"},
+ {k:"snacks",l:"Вода, кофе, перекусы в день",min:2,max:10,step:1,fmt:v=>v+" $ × 13",calc:v=>v*13},
+ {k:"sim",l:"Связь (eSIM или SIM)",min:0,max:30,step:5,fmt:v=>v+" $",calc:v=>v},
+ {k:"tips",l:"Чаевые и камера хранения",min:0,max:80,step:5,fmt:v=>v+" $",calc:v=>v,hint:"Суммы уточняем у гида"},
+ {k:"spa",l:"SPA и массаж",min:0,max:200,step:10,fmt:v=>v+" $",calc:v=>v},
+ {k:"shop",l:"Сувениры и покупки",min:0,max:500,step:10,fmt:v=>v+" $",calc:v=>v}
+];
+$("#calc").innerHTML = `<div class="row fixed"><label>Доплата за тур</label><span class="val">1540 $</span></div><div class="row fixed"><label>Виза в Камбоджу</label><span class="val">30 $</span></div>` +
+ FIELDS.map(f=>`<div class="row"><label for="m-${f.k}">${f.l}</label><output id="o-${f.k}">${f.fmt(M[f.k])}</output>
+   <input type="range" id="m-${f.k}" data-k="${f.k}" min="${f.min}" max="${f.max}" step="${f.step}" value="${M[f.k]}">${f.hint?`<span class="hint">${f.hint}</span>`:""}</div>`).join("");
+function calcTotal(){
+  const own = FIELDS.reduce((s,f)=>s+f.calc(M[f.k]),0);
+  $("#total").textContent = (1570+own).toLocaleString("ru-RU")+" $";
+  $("#totalNote").textContent = `1540 $ доплата + 30 $ виза + ${own.toLocaleString("ru-RU")} $ личные расходы`;
+}
+$("#calc").addEventListener("input",e=>{const k=e.target.dataset.k;if(!k)return;M[k]=+e.target.value;const f=FIELDS.find(x=>x.k===k);$("#o-"+k).textContent=f.fmt(M[k]);store.set("vn26-money",M);calcTotal();});
+calcTotal();
+
+/* routing */
+const VIEWS=["route","places","pack","money"];
+function show(v){
+  if(!VIEWS.includes(v))v="route";
+  VIEWS.forEach(x=>{$("#v-"+x).hidden=x!==v;$("#tab-"+x).setAttribute("aria-selected",x===v);});
+  if(location.hash!=="#"+v){try{history.replaceState(null,"","#"+v)}catch(e){}}
+  try{localStorage.setItem("vn26-tab",v)}catch(e){}
+}
+document.querySelector(".tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(b){show(b.dataset.v);window.scrollTo({top:0});}});
+window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
+let start = location.hash.slice(1); if(!VIEWS.includes(start)){try{start=localStorage.getItem("vn26-tab")||"route"}catch(e){start="route"}}
+show(start);
+const td=document.querySelector(".day.today"); if(td && start==="route") td.scrollIntoView({block:"start"});
+</script>
+</body>
+</html>
