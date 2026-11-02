@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#164a3c">
-<title>Вьетнам и Камбоджа 2026</title>
+<title>Вьетнам 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&family=Manrope:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -163,7 +163,7 @@ td.num{font-family:var(--f-mono);white-space:nowrap}
 
 <header class="hero">
   <div class="wrap">
-    <h1>Вьетнам <span>и</span> Камбоджа</h1>
+    <h1>Вьетнам <span>2026</span></h1>
     <div class="status" id="status"></div>
     <div class="notice" role="note">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 13.5 3 11l1.5-1.5 8 1 4.2-4.2a1.8 1.8 0 0 1 2.5 2.5L15 13l1 8-1.5 1.5-2.5-7.5-3 3v2.5L7.5 22l-1-3.5L3 17.5 4.5 16H7z"/></svg>
@@ -381,8 +381,9 @@ const PACK = [
  {g:"Одежда",i:["Лёгкие футболки и рубашки свободного кроя","Шорты","Брюки, юбка или платье ниже колена (храмы)","Кофта или кардиган","Тонкая ветровка","Палантин или платок","Головной убор","Солнцезащитные очки","Купальник","Наряд на выход","Быстросохнущие вещи для Дананга"]},
  {g:"Погода и солнце",i:["Дождевик","SPF 50","Репеллент (можно купить на месте)"]},
  {g:"Аптечка",note:"По составу и дозировкам лучше посоветоваться с врачом",i:["Свои постоянные лекарства с запасом","От диареи и отравления, сорбент, регидратация","Жаропонижающее и обезболивающее","От аллергии","От укачивания","От простуды и горла","Пластыри, в том числе от мозолей, антисептик","Средство после загара"]},
- {g:"Документы и деньги",i:["Паспорт (действует 6+ месяцев после поездки)","Копия паспорта","Распечатки билетов","Страховка (лучше расширенная)","1540 $ новыми долларами на доплату","Деньги на личные расходы"]},
- {g:"Техника",i:["Переходник (розетки A, C, F)","Пауэрбанк (только в ручной клади)","eSIM или план купить местную SIM","Зарядки"]},
+ {g:"Документы: проверить и распечатать",note:"Бумажные копии выручат, если сядет телефон или не будет интернета",i:["Паспорт: действует не меньше 6 месяцев после возвращения","Правила въезда во Вьетнам для своего гражданства проверены","Копия паспорта: бумажная и фото в телефоне","Распечатка международных билетов туда и обратно","Распечатка внутренних перелётов: Ханой → Дананг 10.11, Дананг → Ханой 15.11","Страховка (лучше расширенная, с активным отдыхом): распечатка полиса","Телефон страховой для экстренных случаев сохранён в телефоне","Онлайн-регистрация на рейсы, когда откроется (обычно за 24 часа)","Копии всех документов в облаке или в «Избранном» мессенджера","Контакты Маргариты и гида сохранены в телефоне"]},
+ {g:"Деньги и карты",i:["1540 $ новыми долларами на доплату","Деньги на личные расходы","Банковская карта и запасная карта","Мелкие купюры на первый день"]},
+ {g:"Техника",i:["Переходник (розетки A, C, F)","Пауэрбанк (только при себе, в багаж нельзя)","eSIM или план купить местную SIM","Зарядки"]},
  {g:"Багаж",i:["Чемодан до 20 кг: на внутренних рейсах только багаж, без ручной клади","Пауэрбанк и зажигалки — только при себе, в багаж нельзя","Документы, деньги и лекарства — тоже при себе"]}
 ];
 
@@ -543,7 +544,7 @@ document.addEventListener("click",e=>{const c=e.target.closest(".chip[data-place
   if(el){el.scrollIntoView({behavior:"smooth",block:"start"});el.style.borderColor="var(--gold)";setTimeout(()=>el.style.borderColor="",1600);}});
 
 /* packing */
-let packed = store.get("vn26-pack",{});
+let packed = store.get("vn26-pack2",{});
 function renderPack(){
   let total=0,done=0;
   $("#pack").innerHTML = PACK.map((g,gi)=>{
@@ -554,11 +555,11 @@ function renderPack(){
   $("#packBar").style.width = (total?done/total*100:0)+"%";
   $("#packMeta").textContent = `Собрано ${done} из ${total}`;
 }
-$("#pack").addEventListener("change",e=>{const k=e.target.dataset.k;if(!k)return;packed[k]=e.target.checked;if(!packed[k])delete packed[k];store.set("vn26-pack",packed);renderPack();});
+$("#pack").addEventListener("change",e=>{const k=e.target.dataset.k;if(!k)return;packed[k]=e.target.checked;if(!packed[k])delete packed[k];store.set("vn26-pack2",packed);renderPack();});
 let resetArmed=false;
 $("#packReset").addEventListener("click",()=>{
   if(!resetArmed){resetArmed=true;$("#packReset").textContent="Точно снять все?";$("#resetMsg").textContent="Нажмите ещё раз для подтверждения";setTimeout(()=>{resetArmed=false;$("#packReset").textContent="Снять все отметки";$("#resetMsg").textContent="";},4000);return;}
-  packed={};store.set("vn26-pack",packed);resetArmed=false;$("#packReset").textContent="Снять все отметки";$("#resetMsg").textContent="Отметки сняты";renderPack();});
+  packed={};store.set("vn26-pack2",packed);resetArmed=false;$("#packReset").textContent="Снять все отметки";$("#resetMsg").textContent="Отметки сняты";renderPack();});
 renderPack();
 
 /* money */
