@@ -189,7 +189,7 @@ td.num{font-family:var(--f-mono);white-space:nowrap}
 <main><div class="wrap">
 
 <section class="view" id="v-route" hidden>
-  <p class="lead">Программа по дням. Погода — прогноз Open-Meteo от 2 ноября: чем дальше дата, тем он менее точный. Обновим перед вылетом.</p>
+  <p class="lead" id="wxStamp">Программа по дням. Погода — прогноз Open-Meteo от 2 ноября. Если открыть страницу с интернетом, прогноз обновится сам.</p>
   <div class="mapcard" aria-label="Схема маршрута">
     <svg id="map" viewBox="0 0 360 300" role="img" aria-label="Схема маршрута: Ханой, Халонг, Ниньбинь, Дананг, Хойан"></svg>
   </div>
@@ -226,7 +226,7 @@ td.num{font-family:var(--f-mono);white-space:nowrap}
   <p class="lead">Уже входит в тур: завтраки, трансферы, экскурсии по программе, питание на круизе 7–8.11.</p>
 </section>
 
-<p class="foot">Черновик группы, сверяем с гидом. Погода: прогноз Open-Meteo от 2 ноября 2026, дальше 5–7 дней он может заметно измениться. Время местное, UTC+7.</p>
+<p class="foot">Черновик группы, сверяем с гидом. Погода: прогноз Open-Meteo, обновляется при открытии страницы с интернетом; без интернета показывается последний сохранённый прогноз. Время местное, UTC+7.</p>
 </div></main>
 
 <script>
@@ -263,14 +263,14 @@ const DAYS = [
   notes:[["wear","Кроссовки или сандалии с закрытым носом, головной убор, платок для храмов"],["wear","SPF 50, репеллент, вода: на лодке 3 часа под солнцем"]]},
  {date:"2026-11-10", wd:"вт", city:"danang", title:"Перелёт в Дананг", t:"+23…+25°", w:"сильный ливень",
   flow:["Трансфер в аэропорт Ханоя","Перелёт в Дананг","Трансфер в отель"],
-  places:[], notes:[["warn","По прогнозу сильный ливень: дождевик и обувь, которой не страшна вода"],["wear","Чемодан до 20 кг"]]},
+  places:[], notes:[["wear","Чемодан до 20 кг"]]},
  {date:"2026-11-11", wd:"ср", city:"danang", title:"Дананг: отдых", t:"+24…+25°", w:"гроза, сильный дождь",
   flow:["Отдых в отеле: бассейн, пляж, если позволит погода","SPA или массаж по желанию"],
-  places:["mykhe"], notes:[["warn","По прогнозу гроза и сильный дождь: пляж может не получиться, запасной план — SPA и массаж"],["wear","Дождевик, быстросохнущие вещи"]]},
+  places:["mykhe"], notes:[["wear","Дождевик, быстросохнущие вещи"]]},
  {date:"2026-11-12", wd:"чт", city:"danang", title:"Бана-Хиллс и Мраморные горы", t:"внизу +24…+28°, в горах +14…+19°", w:"дождь, туман",
   flow:["Выезд на экскурсию","Гора Бана: фуникулёр, канатная дорога, Золотой мост, Сад любви, пагода Линь Унг","Мраморные горы","Возвращение в отель"],
   places:["bana","goldenbridge","linhung","marble"],
-  notes:[["warn","По прогнозу дождь и туман в горах: Золотой мост может быть в облаках"],["wear","Обязательно кофта или ветровка и дождевик: наверху прохладно"],["wear","Удобная обувь, в пагодах плечи и колени закрыты"]]},
+  notes:[["wear","Обязательно кофта или ветровка и дождевик: наверху прохладно"],["wear","Удобная обувь, в пагодах плечи и колени закрыты"]]},
  {date:"2026-11-13", wd:"пт", city:"danang", title:"Дананг: свободный день", t:"+23…+28°", w:"небольшой дождь",
   flow:["Пляж, если повезёт с погодой","Если дождь: SPA, массаж, кафе"],
   places:["mykhe"], notes:[["warn","В ноябре часто волны. Купаемся только там, где разрешено, смотрим на флаги"]]},
@@ -509,13 +509,57 @@ function plural(n,a,b,c){const m=n%10,h=n%100;if(m===1&&h!==11)return a;if(m>=2&
 $("#days").innerHTML = DAYS.map(d=>{
   const [y,m,dd]=d.date.split("-");
   const isToday = d.date===todayIso;
-  return `<article class="day${isToday?" today":""}" id="day-${dd}">
+  return `<article class="day${isToday?" today":""}" id="day-${dd}" data-date="${d.date}">
     <div class="dayhead"><div><div class="date">${+dd}.${m} · ${d.wd}${isToday?" · сегодня":""}</div><h3>${esc(d.title)}</h3></div>
     <span class="wx"><i>${esc(d.t)}</i>· ${esc(d.w)}</span></div>
     <ul class="flow">${d.flow.map(f=>`<li>${esc(f)}</li>`).join("")}</ul>
     ${d.places.length?`<div class="chips">${d.places.map(id=>`<button class="chip" type="button" data-place="${id}">${esc(placeById[id].n)}</button>`).join("")}</div>`:""}
     <div class="notes">${d.notes.map(([t,x])=>`<div class="note"><span class="tag ${TAGS[t][0]}">${TAGS[t][1]}</span><span>${esc(x)}</span></div>`).join("")}</div>
   </article>`;}).join("");
+
+/* live weather: Open-Meteo, refreshed on open (cached 3 h) */
+(function(){
+  const LOC={hanoi:[21.03,105.85],halong:[20.91,107.08],ninhbinh:[20.25,105.97],danang:[16.05,108.20],hoian:[15.88,108.33],bana:[15.995,107.99]};
+  const DAYLOC={"2026-11-06":"hanoi","2026-11-07":"halong","2026-11-08":"halong","2026-11-09":"ninhbinh","2026-11-10":"danang","2026-11-11":"danang","2026-11-12":["danang","bana"],"2026-11-13":"danang","2026-11-14":"hoian","2026-11-15":"ninhbinh","2026-11-16":"ninhbinh","2026-11-17":"ninhbinh","2026-11-18":"ninhbinh"};
+  const WMO=c=>c===0?"ясно":c<=2?"переменная облачность":c===3?"облачно":c<=48?"туман":c<=57?"морось":c<=61?"небольшой дождь":c<=67?"дождь":c<=77?"снег":c<=82?"ливни":c<=86?"снег":"гроза";
+  const sg=v=>(v>0?"+":"")+Math.round(v);
+  const fmt=(a,b)=>`${sg(a)}…${sg(b)}°`;
+  async function load(){
+    const cache=store.get("vn26-wx",null);
+    if(cache&&cache.data&&Date.now()-cache.ts<3*3600e3) return cache;
+    const data={};
+    await Promise.all(Object.entries(LOC).map(async([k,[la,lo]])=>{
+      const u=`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code&timezone=Asia%2FBangkok&past_days=7&forecast_days=16`;
+      const r=await fetch(u); if(!r.ok) throw new Error("HTTP "+r.status);
+      const j=await r.json(); data[k]={};
+      j.daily.time.forEach((t,i)=>{const mx=j.daily.temperature_2m_max[i],mn=j.daily.temperature_2m_min[i];
+        if(mx==null||mn==null) return;
+        data[k][t]={mx,mn,p:j.daily.precipitation_sum[i]||0,c:j.daily.weather_code[i]};});
+    }));
+    const fresh={ts:Date.now(),data}; store.set("vn26-wx",fresh); return fresh;
+  }
+  function apply(cache){
+    let n=0;
+    document.querySelectorAll(".day[data-date]").forEach(card=>{
+      const date=card.dataset.date, loc=DAYLOC[date]; if(!loc) return;
+      const f=(Array.isArray(loc)?loc:[loc]).map(l=>cache.data[l]&&cache.data[l][date]);
+      if(!f[0]) return;
+      const w=f[0];
+      const t=f[1]?`внизу ${fmt(w.mn,w.mx)}, в горах ${fmt(f[1].mn,f[1].mx)}`:fmt(w.mn,w.mx);
+      let txt=WMO(w.c); if(w.p>=1) txt+=`, ${Math.round(w.p)} мм`;
+      card.querySelector(".wx").innerHTML=`<i>${t}</i>· ${esc(txt)}`;
+      const notes=card.querySelector(".notes"); const old=notes.querySelector(".wxnote"); if(old) old.remove();
+      const rain=Math.max(...f.filter(Boolean).map(x=>x.p));
+      if(rain>=20){const d=document.createElement("div");d.className="note wxnote";
+        d.innerHTML=`<span class="tag t-warn">Важно</span><span>По прогнозу сильный дождь, до ${Math.round(rain)} мм: дождевик и обувь, которой не страшна вода</span>`;notes.prepend(d);}
+      n++;
+    });
+    const el=document.getElementById("wxStamp");
+    if(el&&n) el.textContent=`Программа по дням. Погода — прогноз Open-Meteo, обновлён ${new Date(cache.ts).toLocaleString("ru-RU",{day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"})}. Чем дальше дата, тем он менее точный.`;
+  }
+  const saved=store.get("vn26-wx",null); if(saved&&saved.data) apply(saved);
+  load().then(apply).catch(()=>{});
+})();
 
 /* places */
 const MOUNTAINS = `<svg viewBox="0 0 300 120" aria-hidden="true"><g fill="#f1ead6"><rect x="40" y="70" width="220" height="6"/><path d="M60 70 L80 30 L100 70Z"/><path d="M200 70 L220 30 L240 70Z"/><path d="M120 70 L130 40 L140 18 L150 4 L160 18 L170 40 L180 70Z"/><path d="M95 70 L105 48 L115 70Z"/><path d="M185 70 L195 48 L205 70Z"/></g></svg>`;
